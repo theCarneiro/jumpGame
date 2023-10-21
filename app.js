@@ -1,30 +1,41 @@
 document.addEventListener('DOMContentLoaded',()=>{
-    //cria a const grid a partir da classe .grid
+    // cria a const grid a partir da classe .grid
     const grid = document.querySelector('.grid');
     // cria const chamada doodler do tipo div no html
     const doodler = document.createElement('div');
-    //cria o espaço a esquerda do doodler
+    // cria o espaço a esquerda do doodler
     let doddlerLeftSpace = 50;
-    //cria o espaço abaixo do doodler
+    // cria o espaço abaixo do doodler
     let doddlerBottomSpace = 150;
-    //essa variável verifica se o jogo acabou
+    // essa variável verifica se o jogo acabou
     let isGameOver = false;
-    //armazena a qtd de plataformas
+    // armazena a qtd de plataformas
     let platformCount = 5;
+    // pra armazenar as plataformas em um array
+    let platforms =[];
+    // id de subida do doodle
+    let upTimeId;
+    // id de descida do doodle
+    let downTimeId;
+    // verifica se está pulando
+    let isJumping=true;
 
-    // cria a função para colocar o doodler dentro da grid
+    // função para criar o doodler dentro da grid
     function createDoodler(){
-        //o metdodo .appendChild coloca um filho(doodler) dentro do elemento pai(grid)
+        // o metdodo .appendChild coloca um filho(doodler) dentro do elemento pai(grid)
         grid.appendChild(doodler);
-        ////metodo .classlist define uma classe pro elemento indicado antes do metodo
+        // metodo .classlist define uma classe pro elemento indicado antes do metodo
         doodler.classList.add('doodler');
+
+        // aqui seta o doodler pra iniciar junto com a plataforma na posição 0 do array, 
+        // pra ele não aparecer pulando do nada
+        doddlerLeftSpace = platforms[0].left;
+
         doodler.style.left = doddlerLeftSpace + 'px';
         doodler.style.bottom = doddlerBottomSpace + 'px';
     }
-    //só pra testar a f1ç
-    //createDoodler();
 
-    //essa classe cria os obj platform
+    // essa classe cria os obj platform
     class Platform{
         //a cada ocorrẽncia de newPlatBottom - que é qd dado pelo for lá em createPlatform()
         constructor(newPlatBottom){
@@ -51,11 +62,72 @@ document.addEventListener('DOMContentLoaded',()=>{
         }
     }
 
+    // função usada para chamar a class Platform
     function createPlatforms(){
         for(let i=0;i < platformCount; i++){
             let platGap = 600/platformCount;
             let newPlatBottom = 100 + i * platGap;
             let newPlatform = new Platform(newPlatBottom);
+            platforms.push(newPlatform);
+            console.log(platforms);
+        }
+    }
+
+    // função usada para criar o efeito de queda das plataformas
+    function movePlatforms(){
+        //qd o bottom do doodle passar de 200px
+        if (doddlerBottomSpace>200){
+            //pra cada elemento platform da array platforms
+            platforms.forEach(platform => {
+                //diminui 4
+                platform.bottom -=2;
+                //cria a let visual pra armazenar a informação criada
+                let visual = platform.visual;
+                //define o bottom do visual para 4px - platforms[platform[visual[style[bottom]]]]
+                visual.style.bottom= platform.bottom + 'px'
+            });
+        }
+
+    }
+
+    function jump(){
+        clearInterval(downTimeId);
+        isJumping = true;
+        upTimeId = setInterval(function(){
+            doddlerBottomSpace+=10;
+            doodler.style.bottom = doddlerBottomSpace+'px';
+            if(doddlerBottomSpace>450){
+                fall();
+            }
+        },30)
+    }
+
+    function fall(){
+        clearInterval(upTimeId);
+        isJumping = false;
+        downTimeId = setInterval(function(){
+            doddlerBottomSpace-=5;
+            doodler.style.bottom = doddlerBottomSpace+'px';
+            if(doddlerBottomSpace<=0){
+                gameOver()
+            }
+        },30)
+    }
+
+    function gameOver(){
+        console.log('game over');
+        isGameOver=true;
+        clearInterval(upTimeId);
+        clearInterval(downTimeId);
+    }
+
+    function control(e){
+        if(e.key==="ArrowLeft"){
+            //moveLeft
+        }else if(e.key==="ArrowRight"){
+            //moveRight
+        }else if(e.key==="ArrowUp"){
+            ///moveStraight
         }
     }
 
@@ -63,8 +135,12 @@ document.addEventListener('DOMContentLoaded',()=>{
         //if(isGameOver=false){
         //se o jogo já acabou, chama a f1ç createDoodler() pra começar o jogo
         if(!isGameOver){
-            createDoodler();
+            // esse metodo precisa vir antes do createDoodler, pq o segundo usa info
+            // gerada no primeiro
             createPlatforms();
+            createDoodler();
+            setInterval(movePlatforms,30);
+            jump();
         } 
     }
     //pode colocar um botão pra chamar essa f1ç
