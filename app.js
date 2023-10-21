@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         if(!isGameOver){
             createDoodler();
             createPlatforms();
-        }
+        } 
     }
     //pode colocar um botão pra chamar essa f1ç
     start();
