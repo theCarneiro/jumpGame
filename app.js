@@ -5,8 +5,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     const doodler = document.createElement('div');
     // cria o espaço a esquerda do doodler
     let doddlerLeftSpace = 50;
+    // ponto inicial do doodle
+    let startPoint = 150;
     // cria o espaço abaixo do doodler
-    let doddlerBottomSpace = 150;
+    let doddlerBottomSpace = startPoint;
     // essa variável verifica se o jogo acabou
     let isGameOver = false;
     // armazena a qtd de plataformas
@@ -94,9 +96,12 @@ document.addEventListener('DOMContentLoaded',()=>{
         clearInterval(downTimeId);
         isJumping = true;
         upTimeId = setInterval(function(){
-            doddlerBottomSpace+=10;
+            doddlerBottomSpace+=15;
             doodler.style.bottom = doddlerBottomSpace+'px';
-            if(doddlerBottomSpace>450){
+            // aqui mudou da v1.1 que antes ia até o pt 350px e começava a cair
+            // agr cai quando chega no startPoint + 250, sendo que agr o
+            // startPoint é dinâmico e muda a cada colisão
+            if(doddlerBottomSpace > startPoint+250){
                 fall();
             }
         },30)
@@ -111,6 +116,26 @@ document.addEventListener('DOMContentLoaded',()=>{
             if(doddlerBottomSpace<=0){
                 gameOver()
             }
+            // aqui configuramos a colisão
+            platforms.forEach(platform=>{
+                if(
+                // essas duas condições iniciais verifica se o bottom do doodle está entre
+                // os 15px de altura da plataforma
+                (doddlerBottomSpace>=platform.bottom) && 
+                (doddlerBottomSpace<=platform.bottom+15) &&
+                // essa verifica se o doodle caiu sobre o ponto inicial de uma plataforma
+                ((doddlerLeftSpace+60)>=platform.left) &&
+                // essa verifica se o doodle caiu até o ponto final de uma plataforma
+                (doddlerLeftSpace<= (platform.left)+85) &&
+                !isJumping
+                ){
+                    // se acertou uma plataforma, registra o log, set o novo startPoint
+                    // e chama a função pra pular dnv  
+                    console.log("acertou uma plataforma")
+                    startPoint = doddlerBottomSpace;
+                    jump();
+                }
+            })            
         },30)
     }
 
