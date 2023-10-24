@@ -6,6 +6,7 @@ body{
     background-color: rgb(133, 205, 50);
     position: relative;
     border-radius: 3%;
+    font-size: 60px; text-align: center;
 }
 
 .doodler{
@@ -21,3 +22,4 @@ body{
     position: absolute;
     border: solid black; border-radius: 30%;
 }
+

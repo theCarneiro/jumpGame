@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     // id de descida do doodle
     let downTimeId;
     // verifica se está pulando
-    let isJumping=true;
+    let isJumping = true;
     // verifica se está indo pra esquerda
     let isGoingLeft = false;
     // verifica se está indo pra direita
@@ -29,7 +29,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     let leftTimeId = false;
     // id de mov pra direita
     let rightTimeId = false;
-
+    // marca a pontuação
+    let score=0;
 
 
     // função para criar o doodler dentro da grid
@@ -97,6 +98,20 @@ document.addEventListener('DOMContentLoaded',()=>{
                 let visual = platform.visual;
                 //define o bottom do visual para 4px - platforms[platform[visual[style[bottom]]]]
                 visual.style.bottom= platform.bottom + 'px'
+
+                // esse if remove as plataformas que chegam na base da grade
+                if(platform.bottom < 1){
+                    let firstPlat = platforms[0].visual;
+                    firstPlat.classList.remove('platform');
+                    platforms.shift();
+                    score++;
+                    console.log(platforms);
+                    // aqui cria novas plataformas no topo da grade conforme
+                    // vai sumindo na base. o 600 é o bottomSpace onde vai surgir
+                    let newPlatform = new Platform(600);
+                    // o push coloca essa novas plataforma no fim do array
+                    platforms.push(newPlatform);
+                }
             });
         }
 
@@ -153,10 +168,15 @@ document.addEventListener('DOMContentLoaded',()=>{
     function gameOver(){
         console.log('game over');
         isGameOver=true;
-        clearInterval(upTimeId);
-        clearInterval(downTimeId);
-        clearInterval(leftTimeId);
-        clearInterval(rightTimeId);
+        // remove todos os elementos da grade enquanto ainda existir um
+        while(grid.firstChild){
+            grid.removeChild(grid.firstChild);
+        }
+        // pontuação do game
+        grid.innerHTML = score;
+        clearInterval(upTimeId); clearInterval(downTimeId);
+        clearInterval(leftTimeId); clearInterval(rightTimeId);
+        
     }
 
     // define os controles de movimento do jogo
@@ -166,7 +186,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             moveLeft();
         }else if(e.key==="ArrowRight"){
             moveRight();
-        }else if(e.key==="ArrowUp"){
+        }else if(e.key==="ArrowDown"){
             moveStraight();
         }
     }
@@ -195,6 +215,11 @@ document.addEventListener('DOMContentLoaded',()=>{
             },30)
         }
     
+    // move reto pra baixo
+    function moveStraight(){
+        clearInterval(leftTimeId);clearInterval(rightTimeId);
+        isGoingLeft = false; isGoingRight = false;
+    }
 
     // função inicial responsável por ordenar oq e como as coisas iniciam
     function start(){
