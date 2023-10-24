@@ -21,6 +21,16 @@ document.addEventListener('DOMContentLoaded',()=>{
     let downTimeId;
     // verifica se está pulando
     let isJumping=true;
+    // verifica se está indo pra esquerda
+    let isGoingLeft = false;
+    // verifica se está indo pra direita
+    let isGoingRight = false;
+    // id de mov pra esquerda
+    let leftTimeId = false;
+    // id de mov pra direita
+    let rightTimeId = false;
+
+
 
     // função para criar o doodler dentro da grid
     function createDoodler(){
@@ -92,41 +102,41 @@ document.addEventListener('DOMContentLoaded',()=>{
 
     }
 
+    // controla o movimento de subida
     function jump(){
         clearInterval(downTimeId);
         isJumping = true;
         upTimeId = setInterval(function(){
             doddlerBottomSpace+=15;
             doodler.style.bottom = doddlerBottomSpace+'px';
-            // aqui mudou da v1.1 que antes ia até o pt 350px e começava a cair
-            // agr cai quando chega no startPoint + 250, sendo que agr o
-            // startPoint é dinâmico e muda a cada colisão
-            if(doddlerBottomSpace > startPoint+250){
+            // altura do pulo a partir do startPoint é 250px
+            if(doddlerBottomSpace > startPoint + 250){
                 fall();
             }
         },30)
     }
 
+    // controla o movimento de descida
     function fall(){
         clearInterval(upTimeId);
         isJumping = false;
         downTimeId = setInterval(function(){
             doddlerBottomSpace-=5;
             doodler.style.bottom = doddlerBottomSpace+'px';
-            if(doddlerBottomSpace<=0){
+            if(doddlerBottomSpace <= 0){
                 gameOver()
             }
             // aqui configuramos a colisão
-            platforms.forEach(platform=>{
+            platforms.forEach(platform =>{
                 if(
                 // essas duas condições iniciais verifica se o bottom do doodle está entre
                 // os 15px de altura da plataforma
-                (doddlerBottomSpace>=platform.bottom) && 
-                (doddlerBottomSpace<=platform.bottom+15) &&
+                (doddlerBottomSpace >= platform.bottom) && 
+                (doddlerBottomSpace <= platform.bottom + 15) &&
                 // essa verifica se o doodle caiu sobre o ponto inicial de uma plataforma
-                ((doddlerLeftSpace+60)>=platform.left) &&
+                ((doddlerLeftSpace + 60)>=platform.left) &&
                 // essa verifica se o doodle caiu até o ponto final de uma plataforma
-                (doddlerLeftSpace<= (platform.left)+85) &&
+                (doddlerLeftSpace <= (platform.left) + 85) &&
                 !isJumping
                 ){
                     // se acertou uma plataforma, registra o log, set o novo startPoint
@@ -139,23 +149,54 @@ document.addEventListener('DOMContentLoaded',()=>{
         },30)
     }
 
+    // controla oq acontece se morrer no jogo
     function gameOver(){
         console.log('game over');
         isGameOver=true;
         clearInterval(upTimeId);
         clearInterval(downTimeId);
+        clearInterval(leftTimeId);
+        clearInterval(rightTimeId);
     }
 
+    // define os controles de movimento do jogo
+    // e de event
     function control(e){
         if(e.key==="ArrowLeft"){
-            //moveLeft
+            moveLeft();
         }else if(e.key==="ArrowRight"){
-            //moveRight
+            moveRight();
         }else if(e.key==="ArrowUp"){
-            ///moveStraight
+            moveStraight();
         }
     }
 
+    // controla o movimento pra esquerda
+    function moveLeft(){
+        clearInterval(rightTimeId);
+        isGoingLeft = true; isGoingRight = false;
+        leftTimeId = setInterval(function(){
+            if(doddlerLeftSpace>=0){
+                doddlerLeftSpace-=5;
+                doodler.style.left=doddlerLeftSpace+'px';
+            }else{moveRight()}
+            },30)
+        }
+        
+    // controla o movimento pra direita
+    function moveRight(){
+        clearInterval(leftTimeId);
+        isGoingLeft = false; isGoingRight = true;
+        rightTimeId = setInterval(function(){
+            if(doddlerLeftSpace<=340){
+                doddlerLeftSpace+=5;
+                doodler.style.left=doddlerLeftSpace+'px';
+            }else{moveLeft()}
+            },30)
+        }
+    
+
+    // função inicial responsável por ordenar oq e como as coisas iniciam
     function start(){
         //if(isGameOver=false){
         //se o jogo já acabou, chama a f1ç createDoodler() pra começar o jogo
@@ -166,8 +207,10 @@ document.addEventListener('DOMContentLoaded',()=>{
             createDoodler();
             setInterval(movePlatforms,30);
             jump();
+            document.addEventListener('keyup',control)
         } 
     }
-    //pode colocar um botão pra chamar essa f1ç
+
+    // pode colocar um botão pra chamar essa f1ç
     start();
 })
