@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     const grid = document.querySelector('.grid');
     // cria const chamada doodler do tipo div no html
     const doodler = document.createElement('div');
+    // cria o botao do replay
+    const rpButton = document.createElement('button');
+    // mostrador no fim do jogo
+    let pFinal = document.createElement('div');
+    // placar atual 
+    let placar = document.createElement('div');
     // cria o espaço a esquerda do doodler
     let doddlerLeftSpace = 50;
     // ponto inicial do doodle
@@ -32,7 +38,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     // marca a pontuação
     let score=0;
 
-
     // função para criar o doodler dentro da grid
     function createDoodler(){
         // o metdodo .appendChild coloca um filho(doodler) dentro do elemento pai(grid)
@@ -46,6 +51,20 @@ document.addEventListener('DOMContentLoaded',()=>{
 
         doodler.style.left = doddlerLeftSpace + 'px';
         doodler.style.bottom = doddlerBottomSpace + 'px';
+    }
+
+    // cria e configura o botão jogar novamente
+    function rePlay(){
+        if (isGameOver = true){
+            grid.appendChild(rpButton);
+            rpButton.classList.add('btnReplay');
+            rpButton.innerHTML = 'Jogar novamente';
+
+            // reinicia o jogo
+            rpButton.addEventListener('click',()=>{
+                location.reload();
+            })
+        }
     }
 
     // essa classe cria os obj platform
@@ -75,7 +94,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         }
     }
 
-    // função usada para chamar a class Platform
+    // chama a class Platform
     function createPlatforms(){
         for(let i=0;i < platformCount; i++){
             let platGap = 600/platformCount;
@@ -86,7 +105,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         }
     }
 
-    // função usada para criar o efeito de queda das plataformas
+    // cria o efeito de queda das plataformas
     function movePlatforms(){
         //qd o bottom do doodle passar de 200px
         if (doddlerBottomSpace>200){
@@ -105,6 +124,13 @@ document.addEventListener('DOMContentLoaded',()=>{
                     firstPlat.classList.remove('platform');
                     platforms.shift();
                     score++;
+
+                    //mostra o placar atual no canto superior direito
+                    grid.appendChild(placar);
+                    placar.classList.add('placar');
+                    placar.innerHTML = score;
+
+                    //grid.innerHTML = score;
                     console.log(platforms);
                     // aqui cria novas plataformas no topo da grade conforme
                     // vai sumindo na base. o 600 é o bottomSpace onde vai surgir
@@ -126,6 +152,9 @@ document.addEventListener('DOMContentLoaded',()=>{
             doodler.style.bottom = doddlerBottomSpace+'px';
             // altura do pulo a partir do startPoint é 250px
             if(doddlerBottomSpace > startPoint + 250){
+                fall();
+            // pra não sumir da tela pulando
+            } else if (doddlerBottomSpace > 620){
                 fall();
             }
         },30)
@@ -173,9 +202,15 @@ document.addEventListener('DOMContentLoaded',()=>{
             grid.removeChild(grid.firstChild);
         }
         // pontuação do game
-        grid.innerHTML = score;
+        //grid.innerHTML = score;
+        grid.appendChild(pFinal);
+        pFinal.classList.add('score');
+        pFinal.innerHTML = score;
+
+        // zera todos os intervalos
         clearInterval(upTimeId); clearInterval(downTimeId);
         clearInterval(leftTimeId); clearInterval(rightTimeId);
+        rePlay();
         
     }
 
