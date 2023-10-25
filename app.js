@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     const grid = document.querySelector('.grid');
     // cria const chamada doodler do tipo div no html
     const doodler = document.createElement('div');
+    // criar botao jogar
+    const btPlay = document.createElement('button');
     // cria o botao do replay
     const rpButton = document.createElement('button');
     // mostrador no fim do jogo
@@ -51,20 +53,6 @@ document.addEventListener('DOMContentLoaded',()=>{
 
         doodler.style.left = doddlerLeftSpace + 'px';
         doodler.style.bottom = doddlerBottomSpace + 'px';
-    }
-
-    // cria e configura o botão jogar novamente
-    function rePlay(){
-        if (isGameOver = true){
-            grid.appendChild(rpButton);
-            rpButton.classList.add('btnReplay');
-            rpButton.innerHTML = 'Jogar novamente';
-
-            // reinicia o jogo
-            rpButton.addEventListener('click',()=>{
-                location.reload();
-            })
-        }
     }
 
     // essa classe cria os obj platform
@@ -256,6 +244,35 @@ document.addEventListener('DOMContentLoaded',()=>{
         isGoingLeft = false; isGoingRight = false;
     }
 
+     // cria e configura o botão jogar novamente
+    function rePlay(){
+        if (isGameOver = true){
+            grid.appendChild(rpButton);
+            rpButton.classList.add('btnReplay');
+            rpButton.innerHTML = 'Jogar novamente?';
+
+            // reinicia o jogo
+            rpButton.addEventListener('click',()=>{
+                location.reload();
+            })
+        }
+    }
+
+    // botão iniciar jogo
+    function play(){
+        if(isGameOver = true){
+            grid.appendChild(btPlay);
+            btPlay.classList.add('btnReplay')
+            btPlay.innerHTML='Iniciar jogo';
+
+            btPlay.addEventListener('click',()=>{
+                isGameOver = false;
+                grid.removeChild(btPlay);
+                start();
+            })
+        }
+    }
+
     // função inicial responsável por ordenar oq e como as coisas iniciam
     function start(){
         //if(isGameOver=false){
@@ -272,5 +289,6 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     // pode colocar um botão pra chamar essa f1ç
-    start();
+    //start();
+    play();
 })
