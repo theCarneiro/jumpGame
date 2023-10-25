@@ -39,6 +39,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     let rightTimeId = false;
     // marca a pontuação
     let score=0;
+    // cria os botoes touch esq e dir
+    const btEsq = document.createElement('div');
+    const btDir = document.createElement('div');
+    const btBaixo = document.createElement('div');
+    // set o id dos botoes touch es e dir
+    let btEsqId = false; let btDirId = false;
 
     // função para criar o doodler dentro da grid
     function createDoodler(){
@@ -202,6 +208,34 @@ document.addEventListener('DOMContentLoaded',()=>{
         
     }
 
+    // cria e controla os botoes touch
+    function btnTouch(){
+        grid.appendChild(btEsq);
+        btEsq.classList.add('btnTouch');
+        btEsq.addEventListener('click',()=>{
+            btEsqId = true;
+            btDirId = false;
+            moveLeft();
+        });
+    
+        grid.appendChild(btDir);
+        btDir.classList.add('btnTouch');
+        btDir.style.left='200px';
+        btDir.addEventListener('click',()=>{
+            btDirId = true;
+            btEsqId = false;
+            moveRight();
+        });
+
+        grid.appendChild(btBaixo);
+        btBaixo.classList.add('btnBaixo');
+        btBaixo.addEventListener('click',()=>{
+            btDirId = false;
+            btEsqId = false;
+            moveStraight();
+        })
+    }
+
     // define os controles de movimento do jogo
     // e de event
     function control(e){
@@ -287,8 +321,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             document.addEventListener('keyup',control)
         } 
     }
-
-    // pode colocar um botão pra chamar essa f1ç
-    //start();
+    
+    btnTouch();
     play();
 })
