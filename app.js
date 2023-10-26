@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded',()=>{
                     console.log(platforms);
                     // aqui cria novas plataformas no topo da grade conforme
                     // vai sumindo na base. o 600 é o bottomSpace onde vai surgir
-                    let newPlatform = new Platform(600);
+                    let newPlatform = new Platform(706);
                     // o push coloca essa novas plataforma no fim do array
                     platforms.push(newPlatform);
                 }
@@ -145,10 +145,10 @@ document.addEventListener('DOMContentLoaded',()=>{
             doddlerBottomSpace+=15;
             doodler.style.bottom = doddlerBottomSpace+'px';
             // altura do pulo a partir do startPoint é 250px
-            if(doddlerBottomSpace > startPoint + 250){
+            if(doddlerBottomSpace > startPoint + 350){
                 fall();
             // pra não sumir da tela pulando
-            } else if (doddlerBottomSpace > 620){
+            } else if (doddlerBottomSpace > 700){
                 fall();
             }
         },30)

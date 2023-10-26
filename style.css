@@ -1,11 +1,13 @@
 body{
     background-color: rgb(52,52,52);
+    zoom: 235%;
+    min-zoom: 230%;
 }
 
 .grid{
     position: relative;
     border-radius: 3%;
-    width: 400px; height: 600px;
+    width: 400px; height: 755px;
     background-color: rgb(133, 205, 50);
 }
 
@@ -25,14 +27,14 @@ body{
 
 .btnReplay{
     position: absolute; 
-    bottom: 300px; left: 150px;
-    width: 100px; height: 45px;
+    bottom: 45%; left:35%;
+    width: 30%; height: 45px;
     border: solid black; border-radius: 25%; 
 }
 
 .score{
     position: absolute; align-items:center;
-    width: 400px; bottom:350px; 
+    width: 400px; bottom: 53%;
     font-size: 60px; text-align: center;
 }
 
@@ -43,13 +45,13 @@ body{
 
 .btnTouch{
     position: absolute;
-    /* border: solid black; */
+    border: solid black;
     width: 200px; height: 300px;
-    bottom: 100px;
+    bottom: 175px;
 }
 
 .btnBaixo{
     position: absolute; bottom: 0px;
-    width: 100%; height: 100px;
-    /* border: solid black; */
+    width: 100%; height: 175px;
+    border: solid black;
 }
